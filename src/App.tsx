@@ -1,43 +1,37 @@
-import {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {Line} from '@ant-design/plots';
 import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
+const DemoLine = () => {
+  const [data, setData] = useState([]);
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  );
-}
+  useEffect(() => {
+    asyncFetch();
+  }, []);
 
-export default App;
+  const asyncFetch = () => {
+    fetch(
+      'https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json'
+    )
+      .then(response => response.json())
+      .then(json => setData(json))
+      .catch(error => {
+        console.log('fetch data failed', error);
+      });
+  };
+  const config = {
+    data,
+    padding: 'auto',
+    xField: 'Date',
+    yField: 'scales',
+    xAxis: {
+      // type: 'timeCat',
+      tickCount: 5,
+    },
+  };
+
+  return <Line {...config} />;
+};
+
+export default DemoLine;
+// export default App;
